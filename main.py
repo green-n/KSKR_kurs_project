@@ -1,8 +1,5 @@
 import numpy as np
-#import matplotlib.pyplot as plt
-import pandas as pd
-#import seaborn as sns
-import scipy.stats as stats
+
 
 
 # Load the data
@@ -45,13 +42,13 @@ def method_of_simple_iterations(matrix_without_answers, answers, epsilon):
 
 
 epsilon = 0.000000001
-
+print("----------------------------------------------------- MATRIX -----------------------------------------------------")
 arr_to_solve = matrix_reading_from_file("./matrix2.txt")
 print(arr_to_solve)
 matrix_without_answers = arr_to_solve[:, :-1]
-print(matrix_without_answers)
+
 answers = arr_to_solve[:, -1]
-print(answers)
+
 
 
 # Solve the system
