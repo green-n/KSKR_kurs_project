@@ -11,6 +11,7 @@ import os
 
 file_path = ""
 height_of_array = 3
+epsilon = 0.00001
 # function for input of array from application
 def input_array():
 
@@ -20,13 +21,10 @@ def input_array():
     small_frame.pack()
     TextBox = tk.Text(small_frame, height=height_of_array, width=multiplier)
     TextBox.pack()
-    check = False
     saveButton = tk.Button(small_frame, text="Save", command=lambda: save_array(TextBox,small_frame))
-    # TextBox.bind("<Return>", lambda event: save_array(TextBox))
-    # saveButton.bind("<Button-1>", lambda event: small_frame.destroy())
 
     saveButton.pack()
-    #destroy the save button after it is clicked
+
 
 
 
@@ -60,7 +58,22 @@ def addFile():
     addFile.path = file_path
     # print(matrix)
 
+
+
+def save_epsilon(TextBox, small_frame):
+    epsilon = TextBox.get("1.0", "end-1c")
+    save_epsilon.epsilon = float(epsilon)
+    small_frame.destroy()
+    epsLabel = tk.Label(frame, text="set epsilon to:" + epsilon)
+    epsLabel.pack()
+
+def setDefaultEpsilon():
+    save_epsilon.epsilon = 0.00001
+
+setDefaultEpsilon()
+
 def solveEquation():
+
     matrix = addFile.matrix
 
     epsilon = 0.00001
@@ -69,7 +82,7 @@ def solveEquation():
     print(arr_to_solve)
     matrix_without_answers = arr_to_solve[:, :-1]
     answers = arr_to_solve[:, -1]
-    result = m.method_of_simple_iterations(matrix_without_answers, answers,epsilon)
+    result = m.method_of_simple_iterations(matrix_without_answers, answers,save_epsilon.epsilon)
     print(result)
     lableResult = tk.Label(frame, text="Result: ")
     lableResult.pack()
@@ -82,6 +95,15 @@ def save_result(result):
     m.save_result_as_file(result, file_path)
 
 
+def set_epsilon():
+    small_frame = tk.Frame(frame, width=100, height=20, bg="lightgray")
+    small_frame.pack()
+    epsLabel = tk.Label(small_frame, text="Epsilon: ")
+    epsLabel.pack()
+    TextBox = tk.Text(small_frame, height=3, width=20)
+    TextBox.pack()
+    saveButton = tk.Button(small_frame, text="Save", command=lambda: save_epsilon(TextBox, small_frame))
+    saveButton.pack()
 
 
 root = tk.Tk()
@@ -96,14 +118,21 @@ frame.place(relwidth=0.8, relheight=0.7,relx=0.1, rely=0.05)
 
 openFile = tk.Button(root, text="Open File", padx=10, pady=5, fg="white", bg="black", command=addFile)
 openFile.pack()
+
 solve = tk.Button(root, text="Solve", padx=10, pady=5, fg="white", bg="black", command=solveEquation)
 solve.pack()
+
 inputFromKeyboard = tk.Button(root, text="Input from keyboard", padx=10, pady=5, fg="white", bg="black", command=input_array)
 inputFromKeyboard.pack()
+
 saveResultAsFile = tk.Button(root, text="Save result as file", padx=10, pady=5, fg="white", bg="black", command=lambda: save_result(solveEquation.result))
 saveResultAsFile.pack()
+
 defaultSave = tk.Button(root, text="Default save", padx=10, pady=5, fg="white", bg="black", command=lambda: m.save_result_as_file(solveEquation.result, addFile.path + "result.txt"))
 defaultSave.pack()
+
+setEpsilon = tk.Button(root, text="Set epsilon", padx=10, pady=5, fg="white", bg="black", command=lambda: set_epsilon())
+setEpsilon.pack()
 root.mainloop()
 
 
